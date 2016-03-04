@@ -21,12 +21,22 @@
     websocket.onerror = function(evt) { onError(evt) };
   }
 
+  function guid() {
+      function s4() {
+          return Math.floor((1 + Math.random()) * 0x10000)
+                  .toString(16)
+                  .substring(1);
+      }
+      return s4() + s4() + '-' + s4() + '-' + s4() + '-' +
+              s4() + '-' + s4() + s4() + s4();
+  }
+
   function onOpen(evt)
   {
     writeToScreen("CONNECTED");
-    doSend(JSON.stringify({_id: "1", name: "project1"}));
-    doSend(JSON.stringify({_id: "2", name: "project2"}));
-    doSend(JSON.stringify({_id: "3", name: "project3"}));
+    Array.apply(null, { length: 100 }).map(Number.call, Number).forEach(function(i) {
+        doSend(JSON.stringify({_id: guid(), name: "project" + i}));
+    });
   }
 
   function onClose(evt)
