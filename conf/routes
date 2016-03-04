@@ -1,0 +1,7 @@
+
+
+
+GET     /                                    controllers.Application.listProjects
+PUT     /projects/:name                      controllers.Application.createProject(name: String)
+GET     /projects/list                       controllers.Application.listProjects
+GET     /projects/:name                      controllers.Application.projects(name: String)
