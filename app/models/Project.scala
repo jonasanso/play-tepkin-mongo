@@ -23,6 +23,10 @@ object Project {
   def apply(bson: BsonDocument): JsResult[Project] = {
     Json.fromJson[Project](bson)
   }
+
+  def toBsonDocument(project: Project): BsonDocument =
+    ("_id" := project._id) ~
+      ("name" := project.name)
 }
 
 @Singleton
@@ -46,6 +50,9 @@ class ProjectRepo @Inject() (mongoConfig: MongoConfig) {
       case JsSuccess(p, _ ) => p
     })
   }
+
+  def insert(ps: List[Project]) =
+    projects.insert(ps.map(Project.toBsonDocument))
 
   def findByName(name: String): Future[Option[Project]] = {
     val byId = "name" := name
