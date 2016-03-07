@@ -1,6 +1,6 @@
 package models
 
-import javax.inject.{Singleton, Inject}
+import javax.inject.{Inject, Singleton}
 
 import akka.actor.ActorRef
 import akka.stream.scaladsl.Source
@@ -8,9 +8,8 @@ import akka.util.Timeout
 import com.github.jeroenr.bson.BsonDocument
 import com.github.jeroenr.bson.BsonDsl._
 import com.github.jeroenr.tepkin.MongoClient
-import com.typesafe.config.Config
 import helpers.BsonDocumentHelper._
-import play.api.{Application, Configuration}
+import play.api.Configuration
 import play.api.libs.json.{JsResult, JsSuccess, Json}
 
 import scala.concurrent.Future
