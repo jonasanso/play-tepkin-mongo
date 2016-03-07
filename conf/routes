@@ -1,11 +1,12 @@
 
 
 
-# websocket test
-GET        /projects              	     controllers.Application.socket
-GET  	   /assets/*file        	     controllers.Assets.at(path="/public", file)
+GET     /                            controllers.Application.listProjects
+PUT     /projects/:name              controllers.Application.createProject(name: String)
+GET     /projects/:name              controllers.Application.projects(name: String)
 
-GET     /                                    controllers.Application.listProjects
-PUT     /projects/:name                      controllers.Application.createProject(name: String)
-GET     /projects/list                       controllers.Application.listProjects
-GET     /projects/:name                      controllers.Application.projects(name: String)
+
+# websocket example
+GET     /projects              	     controllers.Application.socket
+GET  	/assets/*file        	     controllers.Assets.at(path="/public", file)
+
