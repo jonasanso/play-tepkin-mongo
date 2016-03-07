@@ -22,7 +22,7 @@ Review conf/application.conf and check mongo.url a new database 'tepkin' will be
 sbt run
 ```
 
-Open http://localhost:9000/assets/websocketsample.html to create some projects
+Open http://localhost:9000/assets/websocketsample.html to insert projects in a non blocking streaming fashion (with backpressure) using a websocket connection
 
 Open http://localhost:9000/ to list the projects
 
