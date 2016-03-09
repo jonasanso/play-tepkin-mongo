@@ -11,6 +11,7 @@ import com.github.jeroenr.tepkin.MongoClient
 import helpers.BsonDocumentHelper._
 import play.api.Configuration
 import play.api.libs.json.{JsResult, JsSuccess, Json}
+import play.api.modules.tepkinmongo.TepkinMongoApi
 
 import scala.concurrent.Future
 import scala.concurrent.duration._
@@ -28,16 +29,12 @@ object Project {
       ("name" := project.name)
 }
 
-@Singleton
-class MongoConfig @Inject()(conf: Configuration) {
-  val client = MongoClient(conf.getString("mongo.url").getOrElse(throw new IllegalStateException("Please configure mongo.url in your application.conf for example \"mongodb://localhost\" ")))
-}
 
-class ProjectRepo @Inject() (mongoConfig: MongoConfig) {
+class ProjectRepo @Inject() (tepkinMongoApi: TepkinMongoApi) {
+  implicit val ec = tepkinMongoApi.client.ec
   implicit val timeout: Timeout = 5.seconds
-  import mongoConfig.client.ec
 
-  val projects = mongoConfig.client("tepkin")("projects")
+  val projects = tepkinMongoApi.client("tepkin")("projects")
 
   def create(name: String): Future[Boolean] = {
     val project = "name" := name
