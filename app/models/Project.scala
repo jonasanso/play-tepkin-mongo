@@ -1,15 +1,13 @@
 package models
 
-import javax.inject.{Inject, Singleton}
+import javax.inject.Inject
 
 import akka.actor.ActorRef
 import akka.stream.scaladsl.Source
 import akka.util.Timeout
 import com.github.jeroenr.bson.BsonDocument
 import com.github.jeroenr.bson.BsonDsl._
-import com.github.jeroenr.tepkin.MongoClient
 import helpers.BsonDocumentHelper._
-import play.api.Configuration
 import play.api.libs.json.{JsResult, JsSuccess, Json}
 import play.api.modules.tepkinmongo.TepkinMongoApi
 
