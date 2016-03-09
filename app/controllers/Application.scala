@@ -29,12 +29,12 @@ class Application @Inject()(projectRepo: ProjectRepo)
       .map(_.n.toString)
   }
 
-  def createProject(name: String)= Action.async { implicit rs =>
+  def createProject(name: String)= Action.async {
     projectRepo.create(name)
       .map(id => Ok(s"project $id created") )
   }
 
-  def listProjects = Action { implicit rs =>
+  def listProjects = Action {
     val projects = projectRepo.all
                               .map(p => Json.toJson[List[Project]](p))
                               .map(js => ByteString(js.toString()))
@@ -42,7 +42,7 @@ class Application @Inject()(projectRepo: ProjectRepo)
     Ok.sendEntity(Streamed(projects, None, Some(MimeTypes.JSON)))
   }
 
-  def projects(name: String) = Action.async { implicit rs =>
+  def projects(name: String) = Action.async {
     for {
       Some(project) <-  projectRepo.findByName(name)
     } yield Ok(Json.toJson(project))
