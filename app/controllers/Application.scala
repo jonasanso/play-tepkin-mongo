@@ -2,49 +2,53 @@ package controllers
 
 import javax.inject.Inject
 
-import akka.actor.ActorRef
-import akka.stream.scaladsl.{Source, Flow}
+import akka.stream.scaladsl.Flow
 import akka.util.ByteString
 import models.{Project, ProjectRepo}
 import play.api.http.HttpEntity.Streamed
 import play.api.http.MimeTypes
 import play.api.libs.concurrent.Execution.Implicits.defaultContext
 import play.api.libs.json.{JsSuccess, Json}
+import play.api.mvc.WebSocket.MessageFlowTransformer
 import play.api.mvc._
-import concurrent.duration._
 
-class Application @Inject()(projectRepo: ProjectRepo)
-                           extends Controller {
+import scala.concurrent.duration._
 
-  implicit val mt = play.api.mvc.WebSocket.MessageFlowTransformer.stringMessageFlowTransformer
+class Application @Inject()(projectRepo: ProjectRepo) extends Controller {
 
-  def socket = WebSocket.accept[String, String] { request =>
-    Flow[String]
-      .map(Json.parse)
-      .map(js => Json.fromJson[Project](js))
-      .collect { case JsSuccess(project, _) => project }
+  implicit val mt: MessageFlowTransformer[Project, String] = {
+    MessageFlowTransformer.stringMessageFlowTransformer.map { s =>
+      Json.fromJson[Project](Json.parse(s)) match {
+        case JsSuccess(project, _) => project
+      }
+    }
+  }
+
+
+  def socket = WebSocket.accept[Project, String] { request =>
+    Flow[Project]
       .groupedWithin(10, 10 millis)
       .map(_.toList)
       .mapAsyncUnordered(parallelism = 4)(projectRepo.insert)
       .map(_.n.toString)
   }
 
-  def createProject(name: String)= Action.async {
+  def createProject(name: String) = Action.async {
     projectRepo.create(name)
-      .map(id => Ok(s"project $id created") )
+      .map(id => Ok(s"project $id created"))
   }
 
   def listProjects = Action {
     val projects = projectRepo.all
-                              .map(p => Json.toJson[List[Project]](p))
-                              .map(js => ByteString(js.toString()))
+      .map(p => Json.toJson[List[Project]](p))
+      .map(js => ByteString(js.toString()))
 
     Ok.sendEntity(Streamed(projects, None, Some(MimeTypes.JSON)))
   }
 
   def projects(name: String) = Action.async {
     for {
-      Some(project) <-  projectRepo.findByName(name)
+      Some(project) <- projectRepo.findByName(name)
     } yield Ok(Json.toJson(project))
   }
 
