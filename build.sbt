@@ -8,13 +8,8 @@ scalaVersion := "2.11.7"
 
 routesGenerator := InjectedRoutesGenerator
 
-resolvers += "scalaz-bintray" at "https://dl.bintray.com/scalaz/releases"
-
 libraryDependencies ++= Seq(
-    "com.github.jeroenr" %% "tepkin" % "0.6",
+    "com.github.jeroenr" %% "tepkin" % "0.7",
     specs2 % Test
 )
 
-resolvers += "Sonatype snapshots" at "http://oss.sonatype.org/content/repositories/snapshots/"
-
-fork in run := true
