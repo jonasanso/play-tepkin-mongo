@@ -5,8 +5,4 @@
 resolvers += "Typesafe repository" at "http://repo.typesafe.com/typesafe/releases/"
 
 // Use the Play sbt plugin for Play projects
-addSbtPlugin("com.typesafe.play" % "sbt-plugin" % "2.5.0")
-
-//addSbtPlugin("com.jamesward" %% "play-auto-refresh" % "0.0.13")
-
-//addSbtPlugin("com.typesafe.sbt" % "sbt-scalariform" % "1.2.1")
+addSbtPlugin("com.typesafe.play" % "sbt-plugin" % "2.5.1")
